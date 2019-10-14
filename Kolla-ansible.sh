@@ -25,3 +25,7 @@ kolla-genpwd
 kolla-ansible -i /home/vagrant/all-in-one prechecks -vvv
 
 kolla-ansible -i /home/vagrant/all-in-one deploy -vvv
+
+kolla-ansible post-deploy
+
+pip install python-openstackclient python-glanceclient python-neutronclient
