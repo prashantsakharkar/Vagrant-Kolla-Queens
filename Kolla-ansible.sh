@@ -16,7 +16,6 @@ network_interface: "eth1"
 neutron_external_interface: "eth2"
 openstack_region_name: "USWEST"
 enable_haproxy: "no"
-enable_horizon: "yes"
 enable_cinder_backend_lvm: "yes"
 enable_cinder: "yes"" >> /etc/kolla/globals.yml
 
