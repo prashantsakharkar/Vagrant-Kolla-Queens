@@ -15,6 +15,7 @@ kolla_internal_vip_address: "192.168.14.212"
 network_interface: "eth1"
 neutron_external_interface: "eth2"
 openstack_region_name: "USWEST"
+enable_horizon: "yes"
 enable_haproxy: "no"
 enable_cinder_backend_lvm: "yes"
 enable_cinder: "yes"" >> /etc/kolla/globals.yml
