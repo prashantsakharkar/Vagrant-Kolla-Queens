@@ -6,12 +6,14 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.provider :libvirt do |libvirt|
+    config.vm.define "controller" do |controller|
+    config.vm.provider :libvirt do |libvirt|
     libvirt.cpus = 8
     libvirt.storage :file, :size => '100G', :device => 'vdb', :type => 'raw'
     libvirt.cputopology :sockets => '4', :cores => '2', :threads => '1'
     libvirt.memory = 10240
   end
+ end
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -39,8 +41,10 @@ Vagrant.configure("2") do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.network "public_network", :dev => "br0", :ip => "192.168.14.212", :netmask => "255.255.0.0"
-  config.vm.network "public_network", :dev => "br0", auto_config: false
+  config.vm.network "public_network", :type => "bridge", :dev => "br0", :ip => "192.168.14.213", :netmask => "255.255.0.0"
+  config.vm.network "public_network", :type => "bridge", :dev => "virbr2", :ip => "10.10.10.213", :netmask => "255.255.0.0"
+ # config.vm.network "private_network", ip: "10.10.10.213", :netmask => "255.255.0.0"
+  config.vm.network "public_network", :type => "bridge", :dev => "br0", auto_config: false
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -79,4 +83,5 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "dependecy.sh"
     config.vm.provision :shell, :path => "docker.sh"
     config.vm.provision :shell, :path => "Kolla-ansible.sh"
+    config.vm.provision :shell, :path => "createresources.sh"
 end
