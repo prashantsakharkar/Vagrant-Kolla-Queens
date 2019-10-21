@@ -84,4 +84,5 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "docker.sh"
     config.vm.provision :shell, :path => "Kolla-ansible.sh"
     config.vm.provision :shell, :path => "createresources.sh"
+    config.vm.provision :shell, :path => "enable-root-login.sh"
 end
