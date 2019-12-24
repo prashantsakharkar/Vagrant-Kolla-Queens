@@ -12,6 +12,7 @@ openstack project create --domain trilio-test-domain --description trilio-test-p
 openstack quota set --backups 100 --cores 100 --instances 100 --snapshots 100 --volumes 100 --secgroups 100 --secgroup-rules 1000 trilio-test-project-1
  openstack quota set --backups 100 --cores 100 --instances 100 --snapshots 100 --volumes 100 --secgroups 100 --secgroup-rules 1000 trilio-test-project-2
 
+openstack role add --domain default --user admin admin
 openstack role add --user trilio-admin-user --project trilio-test-project-1 admin
 openstack role add --user trilio-admin-user --project trilio-test-project-1 _member_
 openstack role add --user trilio-admin-user --project trilio-test-project-2 admin
