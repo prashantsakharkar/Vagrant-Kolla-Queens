@@ -1,6 +1,18 @@
 #!/bin/bash -x
 
 source /etc/kolla/admin-openrc.sh
+
+#cloud admin resources
+openstack domain create --enable --description cloud-admin-domain clouddomain
+
+openstack user create --domain clouddomain --email trilio.build@trilio.io --password password --description cloud-admin-user --enable cloudadmin
+
+openstack project create --domain clouddomain --description cloud-domain-project --enable cloudproject
+
+openstack role add --domain clouddomain --user cloudadmin admin
+openstack role add --project cloudproject --user cloudadmin admin
+
+#Test resources
 openstack domain create --enable --description trilio-test-domain trilio-test-domain
 
 openstack user create --domain trilio-test-domain --email trilio.build@trilio.io --password password --description trilio-test-user --enable trilio-test-user
@@ -27,7 +39,7 @@ openstack subnet create --project trilio-test-project-1 --subnet-range 25.25.1.0
 wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
 openstack image create cirros --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
 
-openstack volume type create --public lvm
+openstack volume type create --public --property volume_backend_name=lvm-1 lvm
 
 openstack flavor create --ram 64 --disk 1 --vcpus 1 tiny
 
