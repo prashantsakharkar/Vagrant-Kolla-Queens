@@ -8,10 +8,10 @@
 Vagrant.configure("2") do |config|
     config.vm.define "controller" do |controller|
     config.vm.provider :libvirt do |libvirt|
-    libvirt.cpus = 8
+    libvirt.cpus = 16
     libvirt.storage :file, :size => '100G', :device => 'vdb', :type => 'raw'
-    libvirt.cputopology :sockets => '4', :cores => '2', :threads => '1'
-    libvirt.memory = 10240
+    libvirt.cputopology :sockets => '4', :cores => '4', :threads => '1'
+    libvirt.memory = 61440
   end
  end
   # The most common configuration options are documented and commented below.
@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.network "public_network", :type => "bridge", :dev => "br0", :ip => "192.168.14.213", :netmask => "255.255.0.0"
+  config.vm.network "public_network", :type => "bridge", :dev => "br0", :ip => "172.172.3.202", :netmask => "255.255.255.0", :gateway => "172.172.3.1"
   config.vm.network "public_network", :type => "bridge", :dev => "virbr2", :ip => "10.10.10.213", :netmask => "255.255.0.0"
  # config.vm.network "private_network", ip: "10.10.10.213", :netmask => "255.255.0.0"
   config.vm.network "public_network", :type => "bridge", :dev => "br0", auto_config: false
