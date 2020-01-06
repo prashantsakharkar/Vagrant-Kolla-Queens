@@ -59,3 +59,11 @@ openstack security group rule create --ethertype IPv4 --egress --protocol tcp --
 openstack security group rule create --ethertype IPv4 --ingress --protocol icmp $def_secgrp_id
 openstack security group rule create --ethertype IPv4 --egress --protocol icmp $def_secgrp_id
 
+#Enable multidomain for Horizon
+sed -i '/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = /c OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True' /etc/kolla/horizon/local_settings
+docker stop horizon
+docker start horizon
+
+#Enable cloud admin
+cloudadmin_domain_id=`(openstack domain list | grep clouddomain | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }')`
+service_tenant_id=`(openstack project list | grep service | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }')`
