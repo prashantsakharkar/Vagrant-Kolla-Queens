@@ -36,6 +36,9 @@ openstack role add --user trilio-test-user --domain trilio-test-domain admin
 openstack network create --enable --project trilio-test-project-1 --internal trilio-internal-network
 openstack subnet create --project trilio-test-project-1 --subnet-range 25.25.1.0/24 --ip-version 4 --network trilio-internal-network trilio-internal-subnet
 
+openstack network create --enable --share --external public_network
+openstack subnet create --gateway 172.172.3.1 --ip-version 4 --network public_network --allocation-pool start=172.172.3.208,end=172.172.3.212 --dhcp --subnet-range 172.172.3.1/24 public_subnet
+
 wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
 openstack image create cirros --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
 
