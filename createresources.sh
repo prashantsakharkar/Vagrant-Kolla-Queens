@@ -70,6 +70,9 @@ service_tenant_id=`(openstack project list | grep service | awk -F'|' '!/^(+--)|
 cloudadmin_domain_id=`(openstack domain list | grep clouddomain | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
 cloud_project_id=`(openstack project list | grep cloudproject | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
 
+mv /tmp/policy/policy.json /etc/kolla/keystone/
+chown root:root /etc/kolla/keystone/policy.json
+chmod 660 /etc/kolla/keystone/policy.json
 sed -i '/cloud_admin":/c \    "cloud_admin": "rule:admin_required and (is_admin_project:True or domain_id:'$cloudadmin_domain_id' or project_id:'$service_tenant_id')",' /etc/kolla/keystone/policy.json
 
 echo "
