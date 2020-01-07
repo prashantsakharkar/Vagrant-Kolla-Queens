@@ -70,7 +70,13 @@ service_tenant_id=`(openstack project list | grep service | awk -F'|' '!/^(+--)|
 cloudadmin_domain_id=`(openstack domain list | grep clouddomain | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
 cloud_project_id=`(openstack project list | grep cloudproject | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
 
-#Create cloudrc file on openstack at /etc/kolla/ directory
+sed -i '/cloud_admin":/c \    "cloud_admin": "rule:admin_required and (is_admin_project:True or domain_id:'$cloudadmin_domain_id' or project_id:'$service_tenant_id')",' /etc/kolla/keystone/policy.json
+
+echo "
+[oslo_policy]
+policy_file = policy.json" >> /etc/kolla/keystone/keystone.conf
+
+#Create cloudrc file on openstack at /etc/kolla directory
 echo "export OS_AUTH_URL=$OS_AUTH_URL
 export OS_PROJECT_ID=$cloud_project_id
 export OS_PROJECT_NAME=cloudproject
