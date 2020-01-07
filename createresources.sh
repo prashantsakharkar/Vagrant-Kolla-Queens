@@ -66,5 +66,23 @@ docker start horizon
 sleep 10s
 
 #Enable cloud admin
-cloudadmin_domain_id=`(openstack domain list | grep clouddomain | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }')`
-service_tenant_id=`(openstack project list | grep service | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }')`
+service_tenant_id=`(openstack project list | grep service | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }'| awk '{$1=$1;print}')`
+cloudadmin_domain_id=`(openstack domain list | grep clouddomain | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
+cloud_project_id=`(openstack project list | grep cloudproject | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
+
+#Create cloudrc file on openstack at /etc/kolla/ directory
+echo "export OS_AUTH_URL=$OS_AUTH_URL
+export OS_PROJECT_ID=$cloud_project_id
+export OS_PROJECT_NAME=cloudproject
+export OS_USER_DOMAIN_NAME=clouddomain
+export OS_PROJECT_DOMAIN_ID=$cloudadmin_domain_id
+export OS_PROJECT_DOMAIN_NAME=clouddomain
+unset OS_TENANT_ID
+unset OS_TENANT_NAME
+export OS_USERNAME=cloudadmin
+export OS_REGION_NAME=$OS_REGION_NAME
+export OS_INTERFACE=$OS_INTERFACE
+export OS_IDENTITY_API_VERSION=$OS_IDENTITY_API_VERSION
+export OS_PASSWORD=password
+export OS_INSECURE='true'
+export OS_VERIFY='false'" >> /etc/kolla/cloudrc
