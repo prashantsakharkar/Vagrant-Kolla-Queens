@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "public_network", :type => "bridge", :dev => "br0", :ip => "172.172.3.202", :netmask => "255.255.255.0", :gateway => "172.172.3.1"
   config.vm.network "public_network", :type => "bridge", :dev => "virbr2", :ip => "10.10.10.213", :netmask => "255.255.0.0"
  # config.vm.network "private_network", ip: "10.10.10.213", :netmask => "255.255.0.0"
-  config.vm.network "public_network", :type => "bridge", :dev => "br0", auto_config: false
+  config.vm.network "public_network", :type => "bridge", :dev => "br0", auto_config: true, use_dhcp_assigned_default_route: true
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
