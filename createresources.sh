@@ -36,8 +36,8 @@ openstack role add --user trilio-test-user --domain trilio-test-domain admin
 openstack network create --enable --project trilio-test-project-1 --internal trilio-internal-network
 openstack subnet create --project trilio-test-project-1 --subnet-range 25.25.1.0/24 --ip-version 4 --network trilio-internal-network trilio-internal-subnet
 
-openstack network create --enable --share --external public_network
-openstack subnet create --gateway 172.172.3.1 --ip-version 4 --network public_network --allocation-pool start=172.172.3.208,end=172.172.3.212 --dhcp --subnet-range 172.172.3.1/24 public_subnet
+openstack network create --share --external --enable --provider-network-type flat --provider-physical-network physnet1 public_network
+openstack subnet create --gateway 172.172.3.1 --ip-version 4 --network public_network --allocation-pool start=172.172.3.208,end=172.172.3.212 --no-dhcp --subnet-range 172.172.3.1/24 public_subnet
 
 wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
 openstack image create cirros --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
@@ -70,14 +70,14 @@ service_tenant_id=`(openstack project list | grep service | awk -F'|' '!/^(+--)|
 cloudadmin_domain_id=`(openstack domain list | grep clouddomain | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
 cloud_project_id=`(openstack project list | grep cloudproject | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
 
-mv /tmp/policy/policy.json /etc/kolla/keystone/
-chown root:root /etc/kolla/keystone/policy.json
-chmod 660 /etc/kolla/keystone/policy.json
-sed -i '/cloud_admin":/c \    "cloud_admin": "rule:admin_required and (is_admin_project:True or domain_id:'$cloudadmin_domain_id' or project_id:'$service_tenant_id')",' /etc/kolla/keystone/policy.json
+#mv /tmp/policy/policy.json /etc/kolla/keystone/
+#chown root:root /etc/kolla/keystone/policy.json
+#chmod 660 /etc/kolla/keystone/policy.json
+#sed -i '/cloud_admin":/c \    "cloud_admin": "rule:admin_required and (is_admin_project:True or domain_id:'$cloudadmin_domain_id' or project_id:'$service_tenant_id')",' /etc/kolla/keystone/policy.json
 
-echo "
-[oslo_policy]
-policy_file = policy.json" >> /etc/kolla/keystone/keystone.conf
+#echo "
+#[oslo_policy]
+#policy_file = policy.json" >> /etc/kolla/keystone/keystone.conf
 
 #Create cloudrc file on openstack at /etc/kolla directory
 echo "export OS_AUTH_URL=$OS_AUTH_URL
