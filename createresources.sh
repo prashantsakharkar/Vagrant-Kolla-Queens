@@ -46,10 +46,10 @@ openstack volume type create --public --property volume_backend_name=lvm-1 lvm
 
 openstack flavor create --ram 64 --disk 1 --vcpus 1 tiny
 
-#scp root@192.168.1.20:/mnt/build-vault/file-manager/tvault-recoverymanager-2.3.2.qcow2.gz .
-#gunzip tvault-recoverymanager-2.3.2.qcow2.gz
-#openstack image create fvm --file tvault-recoverymanager-2.3.2.qcow2 --disk-format qcow2 --container-format bare --public
-#openstack image set --property hw_qemu_guest_agent=yes fvm
+chown root:root /opt/file-manager/tvault-recoverymanager-2.3.2.qcow2.gz
+gunzip /opt/file-manager/tvault-recoverymanager-2.3.2.qcow2.gz
+openstack image create fvm --file /opt/file-manager/tvault-recoverymanager-2.3.2.qcow2 --disk-format qcow2 --container-format bare --public
+openstack image set --property hw_qemu_guest_agent=yes fvm
 
 def_secgrp_id=`(openstack security group list --project trilio-test-project-1 | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }')`
 echo $def_secgrp_id
