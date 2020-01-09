@@ -37,7 +37,26 @@ openstack network create --enable --project trilio-test-project-1 --internal tri
 openstack subnet create --project trilio-test-project-1 --subnet-range 25.25.1.0/24 --ip-version 4 --network trilio-internal-network trilio-internal-subnet
 
 openstack network create --share --external --enable --provider-network-type flat --provider-physical-network physnet1 public_network
-openstack subnet create --gateway 172.172.3.1 --ip-version 4 --network public_network --allocation-pool start=172.172.3.208,end=172.172.3.220 --no-dhcp --subnet-range 172.172.3.1/24 public_subnet
+openstack subnet create --gateway 172.172.3.1 --ip-version 4 --network public_network --allocation-pool start=172.172.3.208,end=172.172.3.230 --no-dhcp --subnet-range 172.172.3.1/24 public_subnet
+
+openstack router create --enable --project trilio-test-project-1 test_router
+
+int_network_id=`(openstack network list --internal | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }'| awk '{$1=$1;print}')`
+ext_network_id=`(openstack network list --external | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }'| awk '{$1=$1;print}')`
+router_id=`(openstack router list | grep test_router | awk '$2 && $2 != "ID" {print $2}')`
+subnet_id=`(openstack subnet list | grep $int_network_id | awk '$2 && $2 != "ID" {print $2}')`
+
+openstack router set --external-gateway $ext_network_id test_router
+openstack router add subnet test_router $subnet_id
+
+#Allocate floating ips to test project
+floating_ip_count=12
+i=0
+while [ $i -lt $floating_ip_count ]
+do
+   i=`expr $i + 1`
+   openstack floating ip create --project trilio-test-project-1 $ext_network_id
+done
 
 wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
 openstack image create cirros --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
