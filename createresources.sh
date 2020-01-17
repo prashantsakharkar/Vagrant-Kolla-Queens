@@ -58,10 +58,14 @@ do
    openstack floating ip create --project trilio-test-project-1 $ext_network_id
 done
 
-wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
-openstack image create cirros --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
+#wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+#openstack image create cirros --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
+
+wget https://osm-download.etsi.org/ftp/osm-3.0-three/1st-hackfest/images/cirros-0.3.4-x86_64-disk.img
+openstack image create cirros --file cirros-0.3.4-x86_64-disk.img --disk-format qcow2 --container-format bare --public
 
 openstack volume type create --public --property volume_backend_name=lvm-1 lvm
+openstack volume type create --public --property volume_backend_name=ceph ceph
 
 openstack flavor create --ram 64 --disk 1 --vcpus 1 tiny
 
@@ -85,18 +89,8 @@ docker start horizon
 sleep 10s
 
 #Enable cloud admin
-service_tenant_id=`(openstack project list | grep service | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }'| awk '{$1=$1;print}')`
 cloudadmin_domain_id=`(openstack domain list | grep clouddomain | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
 cloud_project_id=`(openstack project list | grep cloudproject | awk -F'|' '!/^(+--)|ID|aki|ari/ {print $2}' | awk '{$1=$1;print}')`
-
-#mv /tmp/policy/policy.json /etc/kolla/keystone/
-#chown root:root /etc/kolla/keystone/policy.json
-#chmod 660 /etc/kolla/keystone/policy.json
-#sed -i '/cloud_admin":/c \    "cloud_admin": "rule:admin_required and (is_admin_project:True or domain_id:'$cloudadmin_domain_id' or project_id:'$service_tenant_id')",' /etc/kolla/keystone/policy.json
-
-#echo "
-#[oslo_policy]
-#policy_file = policy.json" >> /etc/kolla/keystone/keystone.conf
 
 #Create cloudrc file on openstack at /etc/kolla directory
 echo "export OS_AUTH_URL=$OS_AUTH_URL

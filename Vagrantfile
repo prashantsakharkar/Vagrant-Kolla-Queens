@@ -83,8 +83,8 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "dependecy.sh"
     config.vm.provision :shell, :path => "docker.sh"
     config.vm.provision :shell, :path => "Kolla-ansible.sh"
-    config.vm.synced_folder "policy", "/tmp/policy"
     config.vm.synced_folder "/mnt/build-vault/file-manager", "/opt/file-manager"
     config.vm.provision :shell, :path => "createresources.sh"
+    config.vm.provision :shell, :path => "policy.sh"
     config.vm.provision :shell, :path => "enable-root-login.sh"
 end
