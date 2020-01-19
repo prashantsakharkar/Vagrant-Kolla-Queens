@@ -22,7 +22,7 @@ openstack user create --domain trilio-test-domain --email trilio.build@trilio.io
 openstack project create --domain trilio-test-domain --description trilio-test-project-1 --enable trilio-test-project-1
 openstack project create --domain trilio-test-domain --description trilio-test-project-2 --enable trilio-test-project-2
 openstack quota set --backups 100 --cores 100 --instances 100 --snapshots 100 --volumes 100 --secgroups 100 --secgroup-rules 1000 trilio-test-project-1
- openstack quota set --backups 100 --cores 100 --instances 100 --snapshots 100 --volumes 100 --secgroups 100 --secgroup-rules 1000 trilio-test-project-2
+openstack quota set --backups 100 --cores 100 --instances 100 --snapshots 100 --volumes 100 --secgroups 100 --secgroup-rules 1000 trilio-test-project-2
 
 openstack role add --domain default --user admin admin
 openstack role add --user trilio-admin-user --project trilio-test-project-1 admin
@@ -60,9 +60,11 @@ done
 
 #wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
 #openstack image create cirros --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
+#rm -f cirros-0.4.0-x86_64-disk.img
 
 wget https://osm-download.etsi.org/ftp/osm-3.0-three/1st-hackfest/images/cirros-0.3.4-x86_64-disk.img
 openstack image create cirros --file cirros-0.3.4-x86_64-disk.img --disk-format qcow2 --container-format bare --public
+rm -f cirros-0.3.4-x86_64-disk.img
 
 openstack volume type create --public --property volume_backend_name=lvm-1 lvm
 openstack volume type create --public --property volume_backend_name=ceph ceph
@@ -73,6 +75,7 @@ chown root:root /opt/file-manager/tvault-recoverymanager-2.3.2.qcow2.gz
 gunzip /opt/file-manager/tvault-recoverymanager-2.3.2.qcow2.gz
 openstack image create fvm --file /opt/file-manager/tvault-recoverymanager-2.3.2.qcow2 --disk-format qcow2 --container-format bare --public
 openstack image set --property hw_qemu_guest_agent=yes fvm
+rm -rf /opt/file-manager
 
 def_secgrp_id=`(openstack security group list --project trilio-test-project-1 | awk -F'|' '!/^(+--)|ID|aki|ari/ { print $2 }')`
 echo $def_secgrp_id
