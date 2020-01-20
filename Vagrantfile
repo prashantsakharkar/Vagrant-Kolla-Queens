@@ -8,6 +8,7 @@
 Vagrant.configure("2") do |config|
     config.vm.define "controller" do |controller|
     config.vm.provider :libvirt do |libvirt|
+    libvirt.machine_virtual_size = 500
     libvirt.cpus = 16
     libvirt.storage :file, :size => '100G', :device => 'vdb', :type => 'raw'
     libvirt.cputopology :sockets => '4', :cores => '4', :threads => '1'
@@ -22,6 +23,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "generic/ubuntu1804"
   config.vm.hostname = "controller"
+ # config.disksize.size = '50GB'
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -79,12 +81,12 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-    config.vm.provision :shell, :path => "epel.sh"
-    config.vm.provision :shell, :path => "dependecy.sh"
-    config.vm.provision :shell, :path => "docker.sh"
-    config.vm.provision :shell, :path => "Kolla-ansible.sh"
-    config.vm.synced_folder "/mnt/build-vault/file-manager", "/opt/file-manager"
-    config.vm.provision :shell, :path => "createresources.sh"
-    config.vm.provision :shell, :path => "policy.sh"
-    config.vm.provision :shell, :path => "enable-root-login.sh"
+  config.vm.provision :shell, :path => "epel.sh"
+  config.vm.provision :shell, :path => "dependecy.sh"
+  config.vm.provision :shell, :path => "docker.sh"
+  config.vm.provision :shell, :path => "Kolla-ansible.sh"
+  config.vm.synced_folder "/mnt/build-vault/file-manager", "/opt/file-manager"
+  config.vm.provision :shell, :path => "createresources.sh"
+  config.vm.provision :shell, :path => "policy.sh"
+  config.vm.provision :shell, :path => "enable-root-login.sh"
 end
