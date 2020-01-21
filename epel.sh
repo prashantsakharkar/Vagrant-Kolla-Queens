@@ -6,3 +6,5 @@ systemctl disable iscsid.socket
 apt-get update
 apt-get install python-pip -y
 pip install -U pip
+sudo echo -e "yes\n100%" | parted /dev/sda ---pretend-input-tty unit % resizepart 3
+resize2fs /dev/sda3
