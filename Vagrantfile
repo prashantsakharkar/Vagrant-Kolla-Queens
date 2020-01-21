@@ -8,6 +8,7 @@
 Vagrant.configure("2") do |config|
     config.vm.define "controller" do |controller|
     config.vm.provider :libvirt do |libvirt|
+    libvirt.machine_virtual_size = 100
     libvirt.cpus = 8
     libvirt.storage :file, :size => '100G', :device => 'vdb', :type => 'raw'
     libvirt.cputopology :sockets => '4', :cores => '2', :threads => '1'
@@ -44,7 +45,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "public_network", :type => "bridge", :dev => "br0", :ip => "192.168.14.213", :netmask => "255.255.0.0"
   config.vm.network "public_network", :type => "bridge", :dev => "virbr2", :ip => "10.10.10.213", :netmask => "255.255.0.0"
  # config.vm.network "private_network", ip: "10.10.10.213", :netmask => "255.255.0.0"
-  config.vm.network "public_network", :type => "bridge", :dev => "br0", auto_config: false
+  config.vm.network "public_network", :type => "bridge", :dev => "br0", auto_config: true, use_dhcp_assigned_default_route: true
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -79,11 +80,12 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-    config.vm.provision :shell, :path => "epel.sh"
-    config.vm.provision :shell, :path => "dependecy.sh"
-    config.vm.provision :shell, :path => "docker.sh"
-    config.vm.provision :shell, :path => "Kolla-ansible.sh"
-    config.vm.synced_folder "/mnt/build-vault/file-manager", "/opt/file-manager"
-    config.vm.provision :shell, :path => "createresources.sh"
-    config.vm.provision :shell, :path => "enable-root-login.sh"
+  config.vm.provision :shell, :path => "epel.sh"
+  config.vm.provision :shell, :path => "dependecy.sh"
+  config.vm.provision :shell, :path => "docker.sh"
+  config.vm.provision :shell, :path => "Kolla-ansible.sh"
+  config.vm.synced_folder "/mnt/build-vault/file-manager", "/opt/file-manager"
+  config.vm.provision :shell, :path => "createresources.sh"
+  config.vm.provision :shell, :path => "policy.sh"
+  config.vm.provision :shell, :path => "enable-root-login.sh"
 end
