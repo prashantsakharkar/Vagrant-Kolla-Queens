@@ -17,3 +17,6 @@ sed -i '/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = /c OPENSTACK_KEYSTONE_MULTIDOM
 docker stop horizon
 docker start horizon
 sleep 10s
+
+cp /etc/kolla/cinder-volume/*.keyring /etc/ceph/
+cp /etc/kolla/cinder-volume/ceph.conf /etc/ceph/
