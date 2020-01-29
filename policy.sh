@@ -10,7 +10,9 @@ sudo sed -i '/cloud_admin":/c \    "cloud_admin": "rule:admin_required and (is_a
 kolla-ansible -i /home/vagrant/all-in-one reconfigure -vv 
 
 #Enable multidomain for Horizon 
-sed -i '/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = /c OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True' /etc/kolla/horizon/local_settings 
+sed -i '/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = /c OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True' /etc/kolla/horizon/local_settings
+sed -i '/OPENSTACK_SSL_NO_VERIFY = /c OPENSTACK_SSL_NO_VERIFY = True' /etc/kolla/horizon/local_settings
 docker stop horizon 
 docker start horizon 
-sleep 10s
+sleep 15s
+
